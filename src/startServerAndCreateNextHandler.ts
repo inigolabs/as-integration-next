@@ -28,6 +28,26 @@ function startServerAndCreateNextHandler<
   async function handler<HandlerReq extends NextApiRequest>(req: HandlerReq, res: NextApiResponse): Promise<unknown>;
   async function handler<HandlerReq extends NextRequest | Request>(req: HandlerReq, res?: undefined): Promise<Response>;
   async function handler(req: HandlerRequest, res: NextApiResponse | undefined) {
+    // eslint-disable-next-line no-console
+    console.log('waitUntil call');
+
+    waitUntil(
+      new Promise<void>(resolve => {
+        // workaround to give inigo plugin to finish flush process
+        // eslint-disable-next-line no-console
+        console.log('waitUntil start');
+        queueMicrotask(() => {
+          // eslint-disable-next-line no-console
+          console.log('waitUntil queueMicrotask');
+          setTimeout(() => {
+            // eslint-disable-next-line no-console
+            console.log('waitUntil resolve');
+            resolve();
+          }, 20000);
+        });
+      }),
+    );
+    
     const httpGraphQLResponse = await server.executeHTTPGraphQLRequest({
       context: () => contextFunction(req as Req, res as Req extends NextApiRequest ? NextApiResponse : undefined),
       httpGraphQLRequest: {
@@ -63,26 +83,6 @@ function startServerAndCreateNextHandler<
     for (const [key, value] of httpGraphQLResponse.headers) {
       headers[key] = value;
     }
-
-    // eslint-disable-next-line no-console
-    console.log('waitUntil call');
-
-    waitUntil(
-      new Promise<void>(resolve => {
-        // workaround to give inigo plugin to finish flush process
-        // eslint-disable-next-line no-console
-        console.log('waitUntil start');
-        queueMicrotask(() => {
-          // eslint-disable-next-line no-console
-          console.log('waitUntil queueMicrotask');
-          setTimeout(() => {
-            // eslint-disable-next-line no-console
-            console.log('waitUntil resolve');
-            resolve();
-          }, 20000);
-        });
-      }),
-    );
 
     // eslint-disable-next-line consistent-return
     return new Response(
