@@ -113,5 +113,8 @@
         "test:next15"
       ]
     }
+  },
+  "dependencies": {
+    "@vercel/functions": "^1.5.0"
   }
 }

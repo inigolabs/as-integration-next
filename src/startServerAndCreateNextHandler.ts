@@ -2,6 +2,7 @@ import { getBody } from './lib/getBody';
 import { getHeaders } from './lib/getHeaders';
 import { isNextApiRequest } from './lib/isNextApiRequest';
 import { ApolloServer, BaseContext, ContextFunction } from '@apollo/server';
+import { waitUntil } from "@vercel/functions";
 import { NextApiRequest, NextApiResponse } from 'next';
 import { NextRequest } from 'next/server';
 import { Readable } from 'stream';
@@ -62,6 +63,16 @@ function startServerAndCreateNextHandler<
     for (const [key, value] of httpGraphQLResponse.headers) {
       headers[key] = value;
     }
+
+    waitUntil(new Promise<void>((resolve) => {
+      // workaround to give inigo plugin to finish flush process
+
+      queueMicrotask(() => {
+        setTimeout(() => {
+          resolve();
+        }, 2000);
+      });
+    }));
 
     // eslint-disable-next-line consistent-return
     return new Response(
