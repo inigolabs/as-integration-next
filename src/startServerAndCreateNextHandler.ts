@@ -64,9 +64,10 @@ function startServerAndCreateNextHandler<
       headers[key] = value;
     }
 
+    console.log("waitUntil call");
+
     waitUntil(new Promise<void>((resolve) => {
       // workaround to give inigo plugin to finish flush process
-
       console.log("waitUntil start");
       queueMicrotask(() => {
         console.log("waitUntil queueMicrotask");
