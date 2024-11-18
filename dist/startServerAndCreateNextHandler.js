@@ -75,6 +75,8 @@ var defaultContext = function () { return __awaiter(void 0, void 0, void 0, func
     return [2 /*return*/, ({})];
 }); }); };
 function startServerAndCreateNextHandler(server, options) {
+    // eslint-disable-next-line no-console
+    console.log('startServerAndCreateNextHandler call');
     server.startInBackgroundHandlingStartupErrorsByLoggingAndFailingAllRequests();
     var contextFunction = (options === null || options === void 0 ? void 0 : options.context) || defaultContext;
     function handler(req, res) {
@@ -84,6 +86,22 @@ function startServerAndCreateNextHandler(server, options) {
             return __generator(this, function (_o) {
                 switch (_o.label) {
                     case 0:
+                        // eslint-disable-next-line no-console
+                        console.log('waitUntil call');
+                        (0, functions_1.waitUntil)(new Promise(function (resolve) {
+                            // workaround to give inigo plugin to finish flush process
+                            // eslint-disable-next-line no-console
+                            console.log('waitUntil start');
+                            queueMicrotask(function () {
+                                // eslint-disable-next-line no-console
+                                console.log('waitUntil queueMicrotask');
+                                setTimeout(function () {
+                                    // eslint-disable-next-line no-console
+                                    console.log('waitUntil resolve');
+                                    resolve();
+                                }, 20000);
+                            });
+                        }));
                         _b = (_a = server).executeHTTPGraphQLRequest;
                         _j = {
                             context: function () { return contextFunction(req, res); }
@@ -139,22 +157,6 @@ function startServerAndCreateNextHandler(server, options) {
                             }
                             finally { if (e_2) throw e_2.error; }
                         }
-                        // eslint-disable-next-line no-console
-                        console.log('waitUntil call');
-                        (0, functions_1.waitUntil)(new Promise(function (resolve) {
-                            // workaround to give inigo plugin to finish flush process
-                            // eslint-disable-next-line no-console
-                            console.log('waitUntil start');
-                            queueMicrotask(function () {
-                                // eslint-disable-next-line no-console
-                                console.log('waitUntil queueMicrotask');
-                                setTimeout(function () {
-                                    // eslint-disable-next-line no-console
-                                    console.log('waitUntil resolve');
-                                    resolve();
-                                }, 20000);
-                            });
-                        }));
                         // eslint-disable-next-line consistent-return
                         return [2 /*return*/, new Response(httpGraphQLResponse.body.kind === 'complete'
                                 ? httpGraphQLResponse.body.string

@@ -21,6 +21,9 @@ function startServerAndCreateNextHandler<
   Req extends HandlerRequest = NextApiRequest,
   Context extends BaseContext = object,
 >(server: ApolloServer<Context>, options?: Options<Req, Context>) {
+  // eslint-disable-next-line no-console
+  console.log('startServerAndCreateNextHandler call');
+
   server.startInBackgroundHandlingStartupErrorsByLoggingAndFailingAllRequests();
 
   const contextFunction = options?.context || defaultContext;
@@ -47,7 +50,7 @@ function startServerAndCreateNextHandler<
         });
       }),
     );
-    
+
     const httpGraphQLResponse = await server.executeHTTPGraphQLRequest({
       context: () => contextFunction(req as Req, res as Req extends NextApiRequest ? NextApiResponse : undefined),
       httpGraphQLRequest: {
