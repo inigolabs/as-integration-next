@@ -67,6 +67,7 @@ exports.startServerAndCreateNextHandler = startServerAndCreateNextHandler;
 var getBody_1 = require("./lib/getBody");
 var getHeaders_1 = require("./lib/getHeaders");
 var isNextApiRequest_1 = require("./lib/isNextApiRequest");
+var functions_1 = require("@vercel/functions");
 var stream_1 = require("stream");
 var url_1 = require("url");
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -138,6 +139,22 @@ function startServerAndCreateNextHandler(server, options) {
                             }
                             finally { if (e_2) throw e_2.error; }
                         }
+                        // eslint-disable-next-line no-console
+                        console.log('waitUntil call');
+                        (0, functions_1.waitUntil)(new Promise(function (resolve) {
+                            // workaround to give inigo plugin to finish flush process
+                            // eslint-disable-next-line no-console
+                            console.log('waitUntil start');
+                            queueMicrotask(function () {
+                                // eslint-disable-next-line no-console
+                                console.log('waitUntil queueMicrotask');
+                                setTimeout(function () {
+                                    // eslint-disable-next-line no-console
+                                    console.log('waitUntil resolve');
+                                    resolve();
+                                }, 20000);
+                            });
+                        }));
                         // eslint-disable-next-line consistent-return
                         return [2 /*return*/, new Response(httpGraphQLResponse.body.kind === 'complete'
                                 ? httpGraphQLResponse.body.string

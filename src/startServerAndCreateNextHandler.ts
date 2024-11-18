@@ -2,7 +2,7 @@ import { getBody } from './lib/getBody';
 import { getHeaders } from './lib/getHeaders';
 import { isNextApiRequest } from './lib/isNextApiRequest';
 import { ApolloServer, BaseContext, ContextFunction } from '@apollo/server';
-import { waitUntil } from "@vercel/functions";
+import { waitUntil } from '@vercel/functions';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { NextRequest } from 'next/server';
 import { Readable } from 'stream';
@@ -64,19 +64,25 @@ function startServerAndCreateNextHandler<
       headers[key] = value;
     }
 
-    console.log("waitUntil call");
+    // eslint-disable-next-line no-console
+    console.log('waitUntil call');
 
-    waitUntil(new Promise<void>((resolve) => {
-      // workaround to give inigo plugin to finish flush process
-      console.log("waitUntil start");
-      queueMicrotask(() => {
-        console.log("waitUntil queueMicrotask");
-        setTimeout(() => {
-          console.log("waitUntil resolve");
-          resolve();
-        }, 20000);
-      });
-    }));
+    waitUntil(
+      new Promise<void>(resolve => {
+        // workaround to give inigo plugin to finish flush process
+        // eslint-disable-next-line no-console
+        console.log('waitUntil start');
+        queueMicrotask(() => {
+          // eslint-disable-next-line no-console
+          console.log('waitUntil queueMicrotask');
+          setTimeout(() => {
+            // eslint-disable-next-line no-console
+            console.log('waitUntil resolve');
+            resolve();
+          }, 20000);
+        });
+      }),
+    );
 
     // eslint-disable-next-line consistent-return
     return new Response(
