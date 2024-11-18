@@ -46,7 +46,7 @@ function startServerAndCreateNextHandler<
             // eslint-disable-next-line no-console
             console.log('waitUntil resolve');
             resolve();
-          }, 20000);
+          }, 2000);
         });
       }),
     );

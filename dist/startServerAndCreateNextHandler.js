@@ -99,7 +99,7 @@ function startServerAndCreateNextHandler(server, options) {
                                     // eslint-disable-next-line no-console
                                     console.log('waitUntil resolve');
                                     resolve();
-                                }, 20000);
+                                }, 2000);
                             });
                         }));
                         _b = (_a = server).executeHTTPGraphQLRequest;
